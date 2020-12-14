@@ -1,8 +1,23 @@
-//@use "@material/checkbox"; // Required only for data table with row selection.
-//@use "@material/icon-button"; // Required only for data table with column sorting.
+// Required only for data table with row selection.
+@use "@material/checkbox";
+// Required only for data table with column sorting.
+@use "@material/icon-button";
+// Required by pagination
+@use "@material/list";
+@use "@material/menu";
+
+
 @use "@material/data-table/data-table";
 
-//@include checkbox.core-styles;
-//@include icon-button.core-styles;
+
+// Required only for data table with row selection.
+@include checkbox.core-styles;
+// Required only for data table with column sorting.
+@include icon-button.core-styles;
+// Required by pagination
+@include list.core-styles;
+@include menu.core-styles;
+
+
 @include data-table.core-styles;
 @include data-table.theme-baseline;

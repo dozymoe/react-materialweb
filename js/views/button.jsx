@@ -75,9 +75,9 @@ Button.Icon = class extends Component
         let className = this.props.className || '';
         return (
 
-            <i aria-hidden="true" className={'mdc-button__icon ' + className}>
+            <span aria-hidden="true" className={'mdc-button__icon ' + className}>
               {this.props.children}
-            </i>
+            </span>
 
         );
     }
@@ -106,7 +106,7 @@ export class IconButton extends Component
     render()
     {
         let className = this.props.className || '';
-        let props = omit(this.props, ['onClick', 'label', 'className', 'icon']);
+        let props = omit(this.props, ['onClick', 'label', 'className']);
 
         return (
 

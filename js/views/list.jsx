@@ -1,190 +1,296 @@
 import { MDCList } from '@material/list';
 import { MDCRipple } from '@material/ripple';
-import { omit } from 'lodash';
-import { observer } from 'mobx-react';
 import React, { Component } from 'react';
+//-
+import { asNode } from './base.jsx';
 
 
-@observer
+@asNode
 export class List extends Component
 {
-    constructor(props)
+    WANT_CHILDREN = true
+    MODES = ['one_line', 'two_line']
+    DEFAULT_TAG = <ul/>
+
+    prepare()
     {
-        super(props);
-        this.el = new React.createRef();
+        if (this.mode === 'two_line')
+        {
+            this.values.className.push('mdc-list--two-lines');
+        }
     }
 
     componentDidMount()
     {
         this.mdc = new MDCList(this.el.current);
-        if (this.props.selection)
-        {
-            this.mdc.singleSelection = true;
-        }
     }
 
-    componentWillUnmount()
+    template()
     {
-        this.mdc.destroy();
-    }
-
-    render()
-    {
-        let className = this.props.className || '';
-        let selection = this.props.selection;
-        let selected = this.props.value;
-        let props = omit(this.props, ['className', 'twoLines', 'selection',
-                'value']);
-        if (this.props.twoLines)
-        {
-            className += ' mdc-list--two-line';
-        }
-
+        const values = this.values, tag = values.tag;
         return (
 
-            <ul ref={this.el} className={'mdc-list ' + className}
-                role={selection ? 'listbox' : null}>
-              {React.Children.map(this.props.children, (child, idx) =>
-                  {
-                    if (React.isValidElement(child))
-                    {
-                      let value = child.props.value
-                                || child.props['data-value'];
-                      let className = child.props.className || '';
-                      let props = omit(child.props, ['className']);
-                      if (selection && value === selected)
-                      {
-                        className += ' mdc-list-item--selected';
-                      }
-                      return React.cloneElement(
-                          child,
-                          {
-                            ...child.props,
-                            className: className,
-                            role: selection ? 'option' : null,
-                            tabIndex: idx,
-                            selected: selection ? value === selected : null,
-                          });
-                    }
-                    return child;
-                  })}
-            </ul>
+<tag ref={this.el} className={'mdc-list ' + values.className} {...values.props}>
+  {values.child}
+</tag>
 
         );
     }
 }
 
-List.Item = @observer class extends Component
+
+List.Item = @asNode class extends Component
 {
-    constructor(props)
+    WANT_CHILDREN = true
+    DEFAULT_TAG = <li/>
+
+    template_default()
     {
-        super(props);
-        this.el = new React.createRef();
+        const values = this.values, tag = values.tag;
+        return (
+
+<tag className={'mdc-list-item ' + values.className} {...values.props}>
+  <span className="mdc-list-item__ripple"></span>
+  <span className="mdc-list-item__text">{values.child}</span>
+</tag>
+
+        );
+    }
+}
+
+List.LinePrimary = @asNode class extends Component
+{
+    WANT_CHILDREN = true
+    DEFAULT_TAG = <span/>
+
+    template_default()
+    {
+        const values = this.values, tag = values.tag;
+        return (
+
+<tag className={'mdc-list-item__primary-text ' + values.className}
+    {...values.props}>
+  {values.child}
+</tag>
+
+        );
+    }
+}
+
+List.LineSecondary = @asNode class extends Component
+{
+    WANT_CHILDREN = true
+    DEFAULT_TAG = <span/>
+
+    template_default()
+    {
+        const values = this.values, tag = values.tag;
+        return (
+
+<tag className={'mdc-list-item__secondary-text ' + values.className}
+    {...values.props}>
+  {values.child}
+</tag>
+
+        );
+    }
+}
+
+List.Group = @asNode class extends Component
+{
+    WANT_CHILDREN = true
+    DEFAULT_TAG = <h3/>
+
+    template_default()
+    {
+        const values = this.values, tag = values.tag;
+        return (
+
+<div className={'mdc-list-group ' + values.className} {...values.props}>
+  <tag className="mdc-list-group__subheader">{values.label}</tag>
+  {values.child}
+</div>
+
+        );
+    }
+}
+
+List.Divider = @asNode class extends Component
+{
+    DEFAULT_TAG = <li/>
+
+    template_default()
+    {
+        const values = this.values, tag = values.tag;
+        return (
+
+<tag role="separator" className={'mdc-list-divider ' + values.className}
+    {...values.props} />
+
+        );
+    }
+}
+
+
+@asNode
+export class SelectList extends Component
+{
+    WANT_CHILDREN = true
+    MODES = ['list', 'radio', 'checkbox']
+    DEFAULT_TAG = <ul/>
+
+    prepare()
+    {
+        if (this.mode === 'radio')
+        {
+            this.values.props['role'] = 'radiogroup';
+        }
+        else if (this.mode === 'checkbox')
+        {
+            this.values.props['role'] = 'group';
+        }
+        else
+        {
+            this.values.props['role'] = 'listbox';
+        }
+
+        if (this.values.label)
+        {
+            this.values.props['aria-label'] = this.values.label;
+        }
+
+        this.context.list_mode = this.mode;
     }
 
     componentDidMount()
     {
-        this.mdc = new MDCRipple(this.el.current);
+        this.mdc = new MDCList(this.el.current);
     }
 
-    componentWillUnmount()
+    template()
     {
-        this.mdc.destroy();
-    }
+        const values = this.values, tag = values.tag;
+        return (
 
-    render()
+<tag ref={this.el} className={'mdc-list ' + values.className} {...values.props}>
+  {values.child}
+</tag>
+
+        );
+    }
+}
+
+SelectList.Item = @asNode class extends Component
+{
+    WANT_CHILDREN = true
+    NODE_PROPS = ['selected', 'name', 'value']
+    DEFAULT_TAG = <li/>
+
+    prepare()
     {
-        let className = this.props.className || '';
-        let props = omit(this.props, ['className', 'selected', 'value']);
-        if (this.props.selected)
+        // Late declaration of `this.mode`.
+        this.mode = this.context.list_mode || 'list';
+
+        let selected = this.eval(this.props.selected);
+        this.values.input_props = {};
+
+        if (selected)
         {
-            className += ' mdc-list-item--selected';
+            this.values.props['tabindex'] = '0';
+
+            if (mode === 'radio' || mode === 'checkbox')
+            {
+                this.values.props['aria-checked'] = 'true';
+                this.values.input_props['checked'] = 'checked';
+            }
+            else
+            {
+                this.values.props['aria-selected'] = 'true';
+                this.values.className.push('mdc-list-item--selected');
+            }
+        }
+        else
+        {
+            if (mode === 'radio' || mode === 'checkbox')
+            {
+                this.values.props['aria-checked'] = 'false';
+            }
+            else
+            {
+                this.values.props['aria-selected'] = 'false';
+            }
         }
 
+        this.values.name = this.eval(this.props.name);
+        this.values.value = this.eval(this.props.value);
+    }
+
+    template_list()
+    {
+        const values = this.values, tag = values.tag;
         return (
 
-            <li ref={this.el} {...props}
-                aria-selected={this.props.selected}
-                className={'mdc-list-item ' + className}>
-              <span className="mdc-list-item__ripple" />
-              <span className="mdc-list-item__text">
-                {this.props.children}
-              </span>
-            </li>
+<tag role="option" className={'mdc-list-item ' + values.className}
+    {...values.props}>
+  {values.child}
+</tag>
 
         );
     }
-}
 
-List.Item.Primary = @observer class extends Component
-{
-    render()
+    template_radio()
     {
+        const values = this.values, tag = values.tag;
         return (
 
-            <span className="mdc-list-item__primary-text">
-              {this.props.children}
-            </span>
+<tag role="radio" className={'mdc-list-item ' + values.className}
+    {...values.props}>
+  <span className="mdc-list-item__ripple"></span>
+  <span className="mdc-list-item__graphic">
+    <div className="mdc-radio">
+      <input name={values.name} value={values.value} type="radio"
+          id={values.id} className="mdc-radio__native-control"
+          {...values.input_props} />
+      <div className="mdc-radio__background">
+        <div className="mdc-radio__outer-circle"></div>
+        <div className="mdc-radio__inner-circle"></div>
+      </div>
+    </div>
+  </span>
+  <label htmlFor={values.id} className="mdc-list-item__text">
+    {values.label}
+  </label>
+</tag>
 
         );
     }
-}
 
-List.Item.Secondary = @observer class extends Component
-{
-    render()
+    template_checkbox()
     {
+        const values = this.values, tag = values.tag;
         return (
 
-            <span className="mdc-list-item__secondary-text">
-              {this.props.children}
-            </span>
-
-        );
-    }
-}
-
-List.Divider = class extends Component
-{
-    shouldComponentUpdate = () => false
-
-    render()
-    {
-        return <li role="separator" className="mdc-list-divider" />;
-    }
-}
-
-
-@observer
-export class ListGroup extends Component
-{
-    render()
-    {
-        let className = this.props.className || '';
-        let props = omit(this.props, ['className']);
-
-        return (
-
-            <div {...props} className={'mdc-list-group ' + className}>
-              {this.props.children}
-            </div>
-
-        );
-    }
-}
-
-ListGroup.Heading = @observer class extends Component
-{
-    render()
-    {
-        let className = this.props.className || '';
-        let props = omit(this.props, ['className']);
-
-        return (
-
-            <h3 className={'mdc-list-group__subheader ' + className}>
-              {this.props.children}
-            </h3>
+<tag role="checkbox" className={'mdc-list-item ' + values.className}
+      {...values.props}>
+  <span className="mdc-list-item__ripple"></span>
+  <span className="mdc-list-item__graphic">
+    <div className="mdc-checkbox">
+      <input name={values.name} value={values.value} type="checkbox"
+          id={values.id} className="mdc-checkbox__native-control"
+          {...values.input_props} />
+      <div className="mdc-checkbox__background">
+        <svg className="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+          <path className="mdc-checkbox__checkmark-path" fill="none"
+              d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+        </svg>
+        <div className="mdc-checkbox__mixedmark"></div>
+      </div>
+    </div>
+  </span>
+  <label htmlFor={values.id} className="mdc-list-item__text">
+    {values.label}
+  </label>
+</tag>
 
         );
     }

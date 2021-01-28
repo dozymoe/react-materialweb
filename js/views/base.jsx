@@ -1,96 +1,136 @@
-import { isUndefined, omit, uniqueid } from 'lodash';
+import { omit, omitBy, uniqueid } from 'lodash';
+import { observer } from 'mobx-react';
+import React from 'react';
+//-
+import { ensurePrimitive, ensurePrimitiveProps } from '../misc/mobx.js';
 
-export function asTag(Component)
+
+export function asNode(Component)
 {
-    class Tag extends Component
+    @observer
+    class Node extends Component
     {
         //WANT_CHILDREN = false
         //WANT_FORM_FIELD = false
+        //HIDE_FORM_FIELDS = false
+        MUST_HAVE_NODE_PROPS = ['mode', 'tag', 'class', 'label', 'bound_field',
+                'help_text', 'context']
 
         constructor(props)
         {
             super(props);
+            this.MODES = this.MODES || [];
+            this.NODE_PROPS = this.NODE_PROPS || [];
+            this.DEFAULT_TAG = this.DEFAULT_TAG || <div/>;
 
-            if (isUndefined(this.MODES))
-            {
-                this.MODES = [];
-            }
-            let props = this.NODE_PROPS || [];
-            this.NODE_PROPS = ['mode', 'class', 'label', 'bound_field',
-                    'onClick', ...props];
+            this.el = new React.createRef();
+
+            this.componentWillUnmount = this.componentWillUnmount ||
+                    this._componentWillUnmount;
         }
 
         _props()
         {
-            return omit(this.props, this.NODE_PROPS);
+            let props = omit(this.props, this.NODE_PROPS);
+            props = omit(props, this.MUST_HAVE_NODE_PROPS);
+            // Ignore properties with falsy value except empty string.
+            props = omitBy(props, (value, key) =>
+                    {
+                        return value !== '' && !value;
+                    });
+            return ensurePrimitiveProps(props);
         }
 
-        child()
+        _child()
         {
             if (this.WANT_CHILDREN)
             {
-                return this.props.children;
+                return React.Children.map(this.props.children, child =>
+                        {
+                            if (React.isValidElement(child))
+                            {
+                                return React.cloneElement(child,
+                                        {context: this.context});
+                            }
+                            return child;
+                        });
             }
         }
 
-        label()
+        _label()
         {
             if (this.props.label)
             {
                 return this.props.label;
             }
-            if (this.WANT_FORM_FIELD)
-            {
-                return this.props.bound_field.props.label;
-            }
             return '';
         }
 
-        element()
+        _element()
         {
             if (! this.WANT_FORM_FIELD) return;
 
             let field = this.props.bound_field;
-            let attrs = [...field.props];
+            let field_props = ensurePrimitiveProps(field.props);
+            let attrs = {...field_props};
+            attrs.id = this.id;
+            attrs.className = (attrs.className || '').split(' ').filter(x => x);
 
-            attrs.className = (field.props.className || '').split(' ')
-                    .filter(x => x);
-            if (field.props.help_text)
+            let help_text = ensurePrimitive(this.props.help_text);
+            if (help_text)
             {
-                attrs['aria-control'] = this.id + '-hint';
+                attrs['aria-controls'] = this.id + '-hint';
                 attrs['aria-describedby'] = this.id + '-hint';
             }
             if (this.prepare_attributes)
             {
-                this.prepare_attributes(attrs, field.props);
+                this.prepare_attributes(attrs, field_props);
             }
-            attrs.className = attrs.join(' ');
+            attrs.className = attrs.className.join(' ');
 
+            if (this.HIDE_FORM_FIELD)
+            {
+                attrs.type = 'hidden';
+            }
             return <field {...attrs}/>;
         }
 
         element_attributes()
         {
             if (! this.WANT_FORM_FIELD) return {};
-            return this.props.bound_field.props;
+            return ensurePrimitiveProps(this.props.bound_field.props);
         }
 
-        element_hint()
+        element_hint(hint)
         {
             return (
 
 <div className="mdc-text-field-helper-line">
   <div id={this.id + '-hint'} aria-hidden="true"
       className="mdc-text-field-helper-text">
-    {this.props.bound_field.props.help_text}
+    {hint}
   </div>
 </div>
             );
         }
 
+        eval(value)
+        {
+            return ensurePrimitive(value);
+        }
+
+        _componentWillUnmount()
+        {
+            if (this.mdc)
+            {
+                this.mdc.destroy();
+            }
+        }
+
         render()
         {
-            this.mode = this.props.mode;
+            this.context = this.props.context || {};
+            this.mode = ensurePrimitive(this.props.mode);
 
             if (this.MODES.length)
             {
@@ -100,7 +140,7 @@ export function asTag(Component)
                 }
                 else if (this.MODES.indexOf(this.mode) === -1)
                 {
-                    throw Error("Method " + this.mode + " is not allowed.");
+                    throw Error("Mode " + this.mode + " is not allowed.");
                 }
             }
             else
@@ -110,38 +150,41 @@ export function asTag(Component)
 
             if (this.WANT_FORM_FIELD)
             {
-                this.id = this.props.bound_field.props.id;
+                this.id = ensurePrimitive(this.props.bound_field.props.id);
             }
-            else
+            if (! this.id)
             {
-                this.id = uniqueid();
+                this.id = uniqueId(this.id_prefix || 'node');
             }
 
             let values = this.values = {
                 id: this.id,
-                label: this.label,
-                element: this.element,
-                props: this.props,
-                className: (this.props.className || '').split(' ')
-                    .filter(x => x),
+                tag: ensurePrimitive(this.props.tag) || this.DEFAULT_TAG,
+                label: this._label(),
+                props: this._props(),
+                className: (ensurePrimitive(this.props.className) || '')
+                    .split(' ').filter(x => x),
             }
-            if (this.prepare_values)
+            if (this.prepare)
             {
-                this.prepare_values(values);
+                this.prepare();
             }
+
+            values.child = this._child();
+            values.element = this._element();
             values.className = values.className.join(' ');
 
-            let html = this.get_template ? this.get_template(values)
-                    : this._get_template(values);
+            let html = this.template ? this._template() : this._template();
 
-            if (this.WANT_FORM_FIELD && this.props.bound_field.props.help_text)
+            let hint = ensurePrimitive(this.props.help_text);
+            if (this.WANT_FORM_FIELD && hint)
             {
-                return <>{html}{this.element_hit()}</>;
+                return <>{html}{this.element_hint(hint)}</>;
             }
             return html;
         }
 
-        _get_template(values)
+        _template()
         {
             const method = 'template_' + this.mode;
             if (!this[method])
@@ -149,9 +192,9 @@ export function asTag(Component)
                 throw Error("Method is misisng: " + method);
             }
 
-            return this[method](values);
+            return this[method]();
         }
     }
 
-    return Tag;
+    return Node;
 }

@@ -1,96 +1,108 @@
 import { MDCIconButtonToggle } from '@material/icon-button';
 import { MDCRipple } from '@material/ripple';
-import { omit } from 'lodash';
 import React, { Component } from 'react';
+//-
+import { asNode } from './base.jsx';
 
 
+@asNode
 export class Button extends Component
 {
-    constructor(props)
-    {
-        super(props);
-        this.el = new React.createRef();
-    }
+    WANT_CHILDREN = true
+    MODES = ['outlined', 'raised']
+    DEFAULT_TAG = <button/>
 
     componentDidMount()
     {
         this.mdc = new MDCRipple(this.el.current);
     }
 
-    componentWillUnmount()
+    prepare()
     {
-        this.mdc.destroy();
-    }
-
-    render()
-    {
-        let className = this.props.className || '';
-        let props = omit(this.props, ['onClick', 'className', 'outlined',
-                'raised']);
-        if (this.props.outlined)
+        if (this.context.button_class)
         {
-            className += ' mdc-button--outlined';
+            this.values.className.push(...this.context.button_class);
         }
-        else if (this.props.raised)
+        if (this.mode === 'outlined')
         {
-            className += ' mdc-button--raised';
+            this.values.className.push('mdc-button--outlined');
         }
-
-        return (
-
-            <div className="mdc-touch-target-wrapper">
-              <button ref={this.el} {...props} type={props.type || 'button'}
-                  onClick={this.props.onClick}
-                  className={'mdc-button mdc-button--touch ' + className}>
-                <div className="mdc-button__ripple" />
-                {this.props.children}
-                <div className="mdc-button__touch" />
-              </button>
-            </div>
-
-        );
+        else if (this.mode === 'raised')
+        {
+            this.values.className.push('mdc-button--raised');
+        }
     }
-}
 
-Button.Label = class extends Component
-{
-    shouldComponentUpdate = () => false
-
-    render()
+    template()
     {
+        const values = this.values, tag = values.tag;
         return (
 
-            <span className="mdc-button__label">
-              {this.props.children}
-            </span>
+<div className="mdc-touch-target-wrapper">
+  <tag ref={this.el}
+      className={'mdc-button mdc-button--touch ' + values.className}
+      {...values.props}>
+    <div className="mdc-button__ripple" />
+    {values.child}
+    <div className="mdc-button__touch" />
+  </tag>
+</div>
 
         );
     }
 }
 
-Button.Icon = class extends Component
+Button.Label = @asNode class extends Component
 {
-    render()
+    WANT_CHILDREN = true
+    DEFAULT_TAG = <span/>
+
+    template_default()
     {
-        let className = this.props.className || '';
+        const values = this.values, tag = values.tag;
         return (
 
-            <span aria-hidden="true" className={'mdc-button__icon ' + className}>
-              {this.props.children}
-            </span>
+<tag className={'mdc-button__label ' + values.className} {...values.props}>
+  {values.child}
+</tag>
+
+        );
+    }
+}
+
+Button.Icon = @asNode class extends Component
+{
+    WANT_CHILDREN = true
+    DEFAULT_TAG = <span/>
+
+    prepare()
+    {
+        if (this.context.button_icon_class)
+        {
+            this.values.className.push(...this.context.button_icon_class);
+        }
+    }
+
+    template_default()
+    {
+        const values = this.values, tag = values.tag;
+        return (
+
+<tag aria-hidden="true" className={'mdc-button__icon ' + values.className}
+    {...values.props}>
+  {values.child}
+</tag>
 
         );
     }
 }
 
 
+@asNode
 export class IconButton extends Component
 {
-    constructor(props)
-    {
-        super(props);
-        this.el = new React.createRef();
-    }
+    WANT_CHILDREN = true
+    DEFAULT_TAG = <button/>
 
     componentDidMount()
     {
@@ -98,68 +110,70 @@ export class IconButton extends Component
         this.mdc.unbounded = true;
     }
 
-    componentWillUnmount()
+    prepare()
     {
-        this.mdc.destroy();
+        if (this.context.button_icon_class)
+        {
+            this.values.className.push(...this.context.button_icon_class);
+        }
     }
 
-    render()
+    template_default()
     {
-        let className = this.props.className || '';
-        let props = omit(this.props, ['onClick', 'label', 'className']);
-
+        const values = this.values, tag = values.tag;
         return (
 
-            <button ref={this.el} {...props} type={props.type || 'button'}
-                onClick={this.props.onClick}
-                aria-label={this.props.label} title={this.props.label}
-                className={'mdc-icon-button ' + className}>
-              {this.props.children}
-            </button>
+<tag ref={this.el} aria-label={values.label} title={values.label}
+    className={'mdc-icon-button ' + values.className} {...values.props}>
+  {values.child}
+</tag>
 
         );
     }
 }
 
 
+@asNode
 export class ToggleButton extends Component
 {
-    constructor(props)
-    {
-        super(props);
-        this.el = new React.createRef();
-    }
+    NODE_PROPS = ['type', 'state', 'icon_when_on', 'icon_when_off']
 
     componentDidMount()
     {
         this.mdc = new MDCIconButtonToggle(this.el.current);
     }
 
-    componentWillUnmount()
+    prepare()
     {
-        this.mdc.destroy();
+        this.values.state = this.eval(this.props.state);
+        this.values.icon_when_on = this.props.icon_when_on;
+        this.values.icon_when_off = this.props.icon_when_off;
+
+        if (this.context.button_class)
+        {
+            this.values.className.push(...this.context.button_class);
+        }
+        if (this.values.state)
+        {
+            this.values.className.push('mdc-icon-button--on');
+            this.values.props['aria-pressed'] = 'true';
+        }
     }
 
-    render()
+    template_default()
     {
-        let className = this.props.className || '';
-        let props = omit(this.props, ['className', 'state']);
-        if (this.props.state)
-        {
-            className += ' mdc-icon-button--on';
-        }
-
+        const values = this.values, tag = values.tag;
         return (
 
-<button ref={this.el} {...props} type="button" onClick={this.props.onClick}
-    aria-label={this.props.label} title={this.props.label}
-    aria-pressed={this.props.state}
-    className={'mdc-icon-button toggle ' + className}>
+<button ref={this.el} type="button"
+    aria-label={values.label} title={values.label}
+    aria-pressed={values.state}
+    className={'mdc-icon-button toggle ' + values.className} {...values.props}>
   <i className="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">
-    {this.props.icon_when_on}
+    {values.icon_when_on}
   </i>
   <i className="material-icons mdc-icon-button__icon">
-    {this.props.icon_when_off}
+    {values.icon_when_off}
   </i>
 </button>
 

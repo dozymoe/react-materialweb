@@ -1,19 +1,18 @@
 import { MDCDialog } from '@material/dialog';
-import { omit, uniqueId } from 'lodash';
-import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 //-
-import { Button } from './button.jsx';
+import { asNode } from './base.jsx';
 
 
-@observer
+@asNode
 export class Dialog extends Component
 {
-    constructor(props)
+    WANT_CHILDREN = true
+    NODE_PROPS = ['visible', 'onOpen', 'onClose', 'outsideElement']
+
+    prepare()
     {
-        super(props);
-        this.el = new React.createRef();
-        this.id = uniqueId('MDCDialog');
+        this.context.dialogId = this.values.id;
     }
 
     componentDidMount()
@@ -43,11 +42,6 @@ export class Dialog extends Component
         }
     }
 
-    componentWillUnmount()
-    {
-        this.mdc.destroy();
-    }
-
     componentDidUpdate(old)
     {
         if (this.props.visible !== old.visible)
@@ -63,71 +57,76 @@ export class Dialog extends Component
         }
     }
 
-    render()
+    template_default()
     {
+        const values = this.values, tag = values.tag;
         return (
 
-<div ref={this.el} id={this.id} className="mdc-dialog">
+<tag ref={this.el} id={values.id} className={'mdc-dialog ' + values.className}
+    {...values.props}>
   <div className="mdc-dialog__container">
     <div role="alertdialog" aria-modal="true"
-        aria-labelledby={this.id + '-title'}
-        aria-describedby={this.id + '-content'}
+        aria-labelledby={values.id + '-title'}
+        aria-describedby={values.id + '-content'}
         className="mdc-dialog__surface">
-      {React.Children.map(this.props.children, child =>
-          {
-            if (React.isValidElement(child))
-            {
-              return React.cloneElement(child, {dialogId: this.id});
-            }
-            return child;
-          })}
+      {values.child}
     </div>
   </div>
   <div className="mdc-dialog__scrim" />
-</div>
+</tag>
 
         );
     }
 }
 
-Dialog.Title = @observer class extends Component
+Dialog.Title = @asNode class extends Component
 {
-    render()
+    WANT_CHILDREN = true
+    DEFAULT_TAG = <h2/>
+
+    template_default()
     {
+        const values = this.values, tag = values.tag;
         return (
 
-            <h2 id={this.props.dialogId + '-title'}
-                className="mdc-dialog__title">
-              {this.props.children}
-            </h2>
+<tag id={this.context.dialogId + '-title'}
+    className={'mdc-dialog__title ' + values.className} {...values.props}>
+  {values.child}
+</tag>
 
         );
     }
 }
 
-Dialog.Content = @observer class extends Component
+Dialog.Content = @asNode class extends Component
 {
-    render()
+    WANT_CHILDREN = true
+
+    template_default()
     {
+        const values = this.values, tag = values.tag;
         return (
 
-            <div id={this.props.dialogId + '-content'}
-                className="mdc-dialog__content">
-              {this.props.children}
-            </div>
+<tag id={this.context.dialogId + '-content'}
+    className={'mdc-dialog__content ' + values.className} {...values.props}>
+  {values.child}
+</tag>
         );
     }
 }
 
-Dialog.Actions = @observer class extends Component
+Dialog.Actions = @asNode class extends Component
 {
-    render()
+    WANT_CHILDREN = true
+
+    template_default()
     {
+        const values = this.values, tag = values.tag;
         return (
 
-            <div className="mdc-dialog__actions">
-              {this.props.children}
-            </div>
+<tag className={'mdc-dialog__actions ' + values.className} {...values.props}>
+  {values.child}
+</tag>
 
         );
     }
@@ -136,23 +135,29 @@ Dialog.Actions = @observer class extends Component
     static SUBMIT = 'submit'
 }
 
-Dialog.Button = @observer class extends Component
+Dialog.Button = @asNode class extends Component
 {
-    render()
-    {
-        let className = this.props.className || '';
-        let props = omit(this.props, ['className', 'action']);
-        className += ' mdc-dialog__button';
-        if (this.props.action)
-        {
-            props['data-mdc-dialog-action'] = this.props.action;
-        }
+    WANT_CHILDREN = true
+    NODE_PROPS = ['action']
+    DEFAULT_TAG = <button/>
 
+    prepare()
+    {
+        let action = this.eval(this.props.action);
+        if (action)
+        {
+            this.values.props['data-mdc-dialog-action'] = action;
+        }
+    }
+
+    template_default()
+    {
+        const values = this.values, tag = values.tag;
         return (
 
-            <Button className={className} {...props}>
-              {this.props.children}
-            </Button>
+<tag className={'mdc-dialog__button ' + values.className} {...values.props}>
+  {values.child}
+</tag>
 
         );
     }

@@ -1,30 +1,58 @@
 import { MDCSelect } from '@material/select';
-import { omit, uniqueId } from 'lodash';
 import { observable } from 'mobx';
-import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 //-
-import { ensurePrimitive, ensurePrimitiveProps, extract
-       } from '../misc/mobx.js';
+import { asNode } from './base.jsx';
 
 
-@observer
+@asNode
 export class Select extends Component
 {
-    @observable label = ''
+    WANT_CHILDREN = true
+    WANT_FORM_FIELD = true
+    HIDE_FORM_FIELD = true
+    MODES = ['filled', 'outlined']
+    NODE_PROPS = ['value', 'required', 'disabled', 'onChange']
+    DEFAULT_TAG = <ul/>
 
-    constructor(props)
+    @observable selected_text = ''
+
+    prepare_attributes(attrs, default_)
     {
-        super(props);
-        this.el = new React.createRef();
-        this.id = uniqueId('MDCSelect');
+        if (this.values.disabled)
+        {
+            attrs.disabled = 'true';
+        }
+        if (this.values.required)
+        {
+            attrs.required = 'true';
+        }
     }
 
-    updateLabel(value)
+    prepare()
     {
-        let el = this.el.current.querySelector('.mdc-list-item [data-value="'
-                + value + '"] .mdc-list-item__text');
-        this.label = el ? el.textContent : '';
+        this.values.value = this.eval(this.props.value);
+        this.context.list_value = this.values.value;
+
+        this.values.disabled = this.eval(this.props.disabled);
+        this.values.required = this.eval(this.props.required);
+
+        this.values.anchor_props = {};
+
+        if (this.values.disabled)
+        {
+            this.values.className.push('mdc-select--disabled');
+            this.values.anchor_props['aria-disabled'] = 'true';
+        }
+        if (this.values.required)
+        {
+            this.values.className.push('mdc-select--required');
+            this.values.anchor_props['aria-required'] = 'true';
+        }
+        if (!this.values.label)
+        {
+            this.values.className.push('mdc-select--no-label');
+        }
     }
 
     componentDidMount()
@@ -41,211 +69,151 @@ export class Select extends Component
                 });
     }
 
-    componentWillUnmount()
+    template_filled()
     {
-        this.mdc.destroy();
-    }
-
-    renderDropdownIcon()
-    {
+        const values = this.values, tag = values.tag;
         return (
 
-            <span className="mdc-select__dropdown-icon">
-              <svg viewBox="7 10 10 5"
-                  className="mdc-select__dropdown-icon-graphic">
-                <polygon points="7 10 12 15 17 10" stroke="none"
-                    fillRule="evenodd"
-                    className="mdc-select__dropdown-icon-inactive" />
-                <polygon points="7 15 12 10 17 15" stroke="none"
-                      fillRule="evenodd"
-                      className="mdc-select__dropdown-icon-active" />
-              </svg>
-            </span>
-
-        );
-    }
-
-    renderFilled(props, values)
-    {
-        return (
-
-<div ref={this.el} {...ensurePrimitiveProps(props)}
-    className={'mdc-select mdc-select--filled' + values.className}>
-  <div role="button" aria-haspopup="listbox"
-      aria-labelledby={props.id + '_label ' + props.id + '-selected-text'}
-      aria-required={values.required}
-      aria-disabled={values.disabled}
-      className="mdc-select__anchor">
+<div ref={this.el}
+    className={'mdc-select mdc-select--filled ' + values.className}
+    {...values.props}>
+  {values.element}
+  <div role="button" aria-haspopup="listbox" aria-expanded="false"
+      aria-labelledby={values.id + '-label ' + values.id + '-selected-text'}
+      className="mdc-select__anchor"
+      {...values.anchor_props}>
     <span className="mdc-select__ripple" />
-    <span id={props.id + '-selected-text'}
-        className="mdc-select__selected-text">
-      {this.label}
-    </span>
-    {this.renderDropdownIcon()}
     {values.label ?
-      <span id={props.id + '-label'}
-          className="mdc-floating-label mdc-floating-label--float-above">
+      <span id={values.id + '-label'} className="mdc-floating-label">
         {values.label}
       </span> :null}
+    <span className="mdc-select__selected-text-container">
+      <span id={values.id + '-selected-text'}
+          className="mdc-select__selected-text">
+        {this.selected_text}
+      </span>
+    </span>
+    {this.template_dropdown_icon()}
     <span className="mdc-line-ripple" />
   </div>
 
-  <div role="listbox"
-      className={'mdc-select__menu mdc-menu mdc-menu-surface' +
-        ' mdc-menu-surface--fullwidth'}>
-    <ul className="mdc-list">
-      {React.Children.map(this.props.children, (child, idx) =>
-          {
-            if (React.isValidElement(child))
-            {
-              let value = child.props.value;
-              return React.cloneElement(
-                  child,
-                  {
-                    ...child.props,
-                    selected: value === values.value,
-                  });
-            }
-            return child;
-          })}
-    </ul>
+  <div className="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth">
+    <tag className="mdc-list" role="listbox" aria-label={values.label}>
+      {values.child}
+    </tag>
   </div>
 </div>
 
         );
     }
 
-    renderOutlined(props, values)
+    template_outlined()
     {
+        const values = this.values, tag = values.tag;
         return (
 
-<div ref={this.el} {...ensurePrimitiveProps(props)}
-    className={'mdc-select mdc-select--outlined' + values.className}>
-  <div role="button" aria-haspopup="listbox"
-      aria-labelledby={props.id + '-label ' + props.id + '-selected-text'}
-      aria-required={values.required}
-      aria-disabled={values.disabled}
-      className="mdc-select__anchor">
-    <span id={props.id + '-selected-text'}
-        className="mdc-select__selected-text">
-      {this.label}
-    </span>
-    {this.renderDropdownIcon()}
+<div ref={this.el}
+    className={'mdc-select mdc-select--outlined ' + values.className}
+    {...values.props}>
+  {values.element}
+  <div role="button" aria-haspopup="listbox" aria-expanded="false"
+      aria-labelledby={values.id + '-label ' + values.id + '-selected-text'}
+      className="mdc-select__anchor"
+      {...values.anchor_props}>
     <span className="mdc-notched-outline">
       <span className="mdc-notched-outline__leading" />
       {values.label ?
         <span className="mdc-notched-outline__notch">
-          <span id={props.id + '-label'}
-              className="mdc-floating-label mdc-floating-label--float-above">
+          <span id={values.id + '-label'} className="mdc-floating-label">
             {values.label}
           </span>
         </span> :null}
       <span className="mdc-notched-outline__trailing" />
     </span>
+    <span className="mdc-select__selected-text-container">
+      <span id={values.id + '-selected-text'}
+          className="mdc-select__selected-text">
+        {this.selected_text}
+      </span>
+    </span>
+    {this.template_dropdown_icon()}
   </div>
 
-  <div role="listbox"
-      className={'mdc-select__menu mdc-menu mdc-menu-surface' +
+  <div className={'mdc-select__menu mdc-menu mdc-menu-surface' +
         ' mdc-menu-surface--fullwidth'}>
-    <ul className="mdc-list">
-      {React.Children.map(this.props.children, (child, idx) =>
-          {
-            if (React.isValidElement(child))
-            {
-              let value = child.props.value;
-              return React.cloneElement(
-                  child,
-                  {
-                    ...child.props,
-                    selected: value === values.value,
-                  });
-            }
-            return child;
-          })}
-    </ul>
+    <tag role="listbox" className="mdc-list">
+      {values.child}
+    </tag>
   </div>
 </div>
 
         );
     }
 
-    render()
+    template_dropdown_icon()
     {
-        let options, props, values;
-        [options, props] = extract(this.props, 'outlined', 'filled');
-        [values, props] = extract(props, 'className', 'label', 'value',
-                'disabled', 'required', 'hint');
+        return (
 
-        values.className = values.className ? ' ' + values.className : '';
-        values.label = ensurePrimitive(values.label);
-        values.value = ensurePrimitive(values.value);
-        values.disabled = ensurePrimitive(values.disabled);
-        values.required = ensurePrimitive(values.required);
-        props.id = props.id ? ensurePrimitive(props.id) : this.id;
-        if (values.disabled)
-        {
-            values.className += ' mdc-select--disabled';
-        }
-        if (values.required)
-        {
-            values.className += ' mdc-select--required';
-        }
-        if (!values.label)
-        {
-            values.className += ' mdc-select--no-label';
-        }
+<span className="mdc-select__dropdown-icon">
+  <svg viewBox="7 10 10 5"
+      className="mdc-select__dropdown-icon-graphic">
+    <polygon points="7 10 12 15 17 10" stroke="none"
+        fillRule="evenodd"
+        className="mdc-select__dropdown-icon-inactive" />
+    <polygon points="7 15 12 10 17 15" stroke="none"
+          fillRule="evenodd"
+          className="mdc-select__dropdown-icon-active" />
+  </svg>
+</span>
 
-        let html;
-        if (options.outlined)
-        {
-            html = this.renderOutlined(props, values);
-        }
-        else
-        {
-            html = this.renderFilled(props, values);
-        }
+        );
+    }
 
-        return <>
-
-            {html}
-            {values.hint ?
-              <div className="mdc-text-field-helper-line">
-                <div id={props.id + '-hint'} aria-hidden="true"
-                    className="mdc-text-field-helper-text">
-                  {values.hint}
-                </div>
-              </div> :null}
-        </>;
+    updateLabel(value)
+    {
+        let el = this.el.current.querySelector('.mdc-list-item [data-value="'
+                + value + '"] .mdc-list-item__text');
+        this.selected_text = el ? el.textContent : '';
     }
 }
 
-Select.Item = class extends Component
+Select.Item = @asNode class extends Component
 {
-    render()
+    WANT_CHILDREN = true
+    NODE_PROPS = ['value', 'disabled']
+    DEFAULT_TAG = <li/>
+
+    prepare()
     {
-        let className = this.props.className || '';
-        let props = omit(this.props, ['className', 'disabled', 'selected',
-                'value']);
-        if (this.props.disabled)
+        this.values.value = this.eval(this.props.value);
+        this.values.selected = this.values.value === this.context.list_value;
+        if (this.values.selected)
         {
-            className += ' mdc-list-item--disabled';
-        }
-        if (this.props.selected)
-        {
-            className += ' mdc-list-item--selected';
+            this.values.className.push('mdc-list-item--selected');
+            this.values.props['aria-selected'] = 'true';
         }
 
+        this.values.disabled = this.eval(this.props.disabled);
+        if (this.values.disabled)
+        {
+            this.values.className.push('mdc-list-item--disabled');
+            this.values.props['aria-disabled'] = 'true';
+        }
+    }
+
+    template_default()
+    {
+        const values = this.values, tag = values.tag;
         return (
 
-            <li {...props} role="option" data-value={this.props.value || ''}
-                aria-selected={this.props.selected}
-                aria-disabled={this.props.disabled}
-                className={'mdc-list-item ' + className}>
-              <span className="mdc-list-item__ripple" />
-              <span className="mdc-list-item__text">
-                {this.props.children}
-              </span>
-            </li>
+<tag role="option" data-value={values.value || ''}
+    className={'mdc-list-item ' + values.className} {...values.props}>
+  <span className="mdc-list-item__ripple" />
+  <span className="mdc-list-item__text">
+    {values.child}
+  </span>
+</tag>
+
         );
     }
 }

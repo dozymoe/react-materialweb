@@ -68,7 +68,8 @@ Banner.Icon = @asNode class extends Component
         const values = this.values, tag = values.tag;
         return (
 
-<tag role="img" alt={values.label} className="mdc-banner__graphic">
+<tag role="img" alt={values.label} title={values.label}
+    className="mdc-banner__graphic">
   <span className={'mdc-banner__icon ' + values.className} {...values.props}>
     {values.child}
   </span>

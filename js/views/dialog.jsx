@@ -40,6 +40,11 @@ export class Dialog extends Component
                                 'aria-hidden');
                     });
         }
+
+        if (this.props.visible)
+        {
+            this.mdc.open();
+        }
     }
 
     componentDidUpdate(old)
@@ -59,10 +64,10 @@ export class Dialog extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag ref={this.el} id={values.id} className={'mdc-dialog ' + values.className}
+<Tag ref={this.el} id={values.id} className={'mdc-dialog ' + values.className}
     {...values.props}>
   <div className="mdc-dialog__container">
     <div role="alertdialog" aria-modal="true"
@@ -73,7 +78,7 @@ export class Dialog extends Component
     </div>
   </div>
   <div className="mdc-dialog__scrim" />
-</tag>
+</Tag>
 
         );
     }
@@ -82,17 +87,17 @@ export class Dialog extends Component
 Dialog.Title = @asNode class extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <h2/>
+    DEFAULT_TAG = 'h2'
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag id={this.context.dialogId + '-title'}
+<Tag id={this.context.dialogId + '-title'}
     className={'mdc-dialog__title ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -104,13 +109,13 @@ Dialog.Content = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag id={this.context.dialogId + '-content'}
+<Tag id={this.context.dialogId + '-content'}
     className={'mdc-dialog__content ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
         );
     }
 }
@@ -121,12 +126,12 @@ Dialog.Actions = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-dialog__actions ' + values.className} {...values.props}>
+<Tag className={'mdc-dialog__actions ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -139,7 +144,7 @@ Dialog.Button = @asNode class extends Component
 {
     WANT_CHILDREN = true
     NODE_PROPS = ['action']
-    DEFAULT_TAG = <button/>
+    DEFAULT_TAG = 'button'
 
     prepare()
     {
@@ -152,12 +157,12 @@ Dialog.Button = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-dialog__button ' + values.className} {...values.props}>
+<Tag className={'mdc-dialog__button ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }

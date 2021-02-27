@@ -9,7 +9,7 @@ export class TopAppBar extends Component
 {
     WANT_CHILDREN = true
     MODES = ['short', 'short_closed', 'fixed', 'prominent', 'dense']
-    DEFAULT_TAG = <header/>
+    DEFAULT_TAG = 'header'
 
     prepare()
     {
@@ -44,14 +44,14 @@ export class TopAppBar extends Component
 
     template()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-top-app-bar ' + values.className} {...values.props}>
+<Tag className={'mdc-top-app-bar ' + values.className} {...values.props}>
   <div className="mdc-top-app-bar__row">
     {values.child}
   </div>
-</tag>
+</Tag>
 
         );
     }
@@ -61,7 +61,7 @@ export class TopAppBar extends Component
 TopAppBar.Left = @asNode class extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <section/>
+    DEFAULT_TAG = 'section'
 
     prepare()
     {
@@ -70,7 +70,7 @@ TopAppBar.Left = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
 <tag
@@ -79,7 +79,7 @@ TopAppBar.Left = @asNode class extends Component
         + values.className}
     {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -99,7 +99,7 @@ TopAppBar.Menu = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
 <button type="button" aria-label={values.label} title={values.label}
@@ -119,12 +119,12 @@ TopAppBar.Title = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-top-app-bar__title ' + values.className} {...values.props}>
+<Tag className={'mdc-top-app-bar__title ' + values.className} {...values.props}>
   {values.child}
-</tag>'
+</Tag>'
 
         );
     }
@@ -133,7 +133,7 @@ TopAppBar.Title = @asNode class extends Component
 TopAppBar.Right = @asNode class extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <section/>
+    DEFAULT_TAG = 'section'
 
     prepare()
     {
@@ -142,15 +142,15 @@ TopAppBar.Right = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag role="toolbar"
+<Tag role="toolbar"
     className={'mdc-top-app-bar__section mdc-top-app-bar__section--align-end ' +
         + values.className}
     {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }

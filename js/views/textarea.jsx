@@ -9,7 +9,7 @@ export class TextArea extends Component
 {
     WANT_FORM_FIELD = true
     MODES = ['filled', 'outlined']
-    DEFAULT_TAG = <label/>
+    DEFAULT_TAG = 'label'
 
     prepare_attributes(attrs, default_)
     {
@@ -24,10 +24,10 @@ export class TextArea extends Component
 
     template_filled()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag ref={this.el}
+<Tag ref={this.el}
     className={'mdc-text-field mdc-text-field--filled '
         + 'mdc-text-field--textarea mdc-text-field--no-label '
         + values.className}
@@ -37,17 +37,17 @@ export class TextArea extends Component
     {values.element}
   </span>
   <span className="mdc-line-ripple" />
-</tag>
+</Tag>
 
         );
     }
 
     template_outlined()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag ref={this.el}
+<Tag ref={this.el}
     className={'mdc-text-field mdc-text-field--outlined '
         + 'mdc-text-field-textarea mdc-text-field--no-label '
         + values.className}
@@ -59,7 +59,7 @@ export class TextArea extends Component
     <span className="mdc-notched-outline__leading" />
     <span className="mdc-notched-outline__trailing" />
   </span>
-</tag>
+</Tag>
 
         );
     }

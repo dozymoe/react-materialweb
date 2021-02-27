@@ -29,15 +29,15 @@ export class Snackbar extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
 <div ref={this.el} className={'mdc-snackbar ' + values.className}
     {...values.props}>
-  <tag role="status" aria-relevant="additions"
+  <Tag role="status" aria-relevant="additions"
       className="mdc-snackbar__surface">
     {values.child}
-  </tag>
+  </Tag>
 </div>
 
         );
@@ -51,13 +51,13 @@ Snackbar.Content = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag aria-atomic="false" className={'mdc-snackbar__label ' + values.className}
+<Tag aria-atomic="false" className={'mdc-snackbar__label ' + values.className}
     {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -75,13 +75,13 @@ Snackbar.Actions = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag aria-atomic="true" className={'mdc-snackbar__actions ' + values.className}
+<Tag aria-atomic="true" className={'mdc-snackbar__actions ' + values.className}
     {...values.props}
   {values.child}
-</tag>
+</Tag>
         );
     }
 }

@@ -10,7 +10,7 @@ export class Button extends Component
 {
     WANT_CHILDREN = true
     MODES = ['outlined', 'raised']
-    DEFAULT_TAG = <button/>
+    DEFAULT_TAG = 'button'
 
     componentDidMount()
     {
@@ -35,17 +35,17 @@ export class Button extends Component
 
     template()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
 <div className="mdc-touch-target-wrapper">
-  <tag ref={this.el}
+  <Tag ref={this.el}
       className={'mdc-button mdc-button--touch ' + values.className}
       {...values.props}>
     <div className="mdc-button__ripple" />
     {values.child}
     <div className="mdc-button__touch" />
-  </tag>
+  </Tag>
 </div>
 
         );
@@ -55,16 +55,16 @@ export class Button extends Component
 Button.Label = @asNode class extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <span/>
+    DEFAULT_TAG = 'span'
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-button__label ' + values.className} {...values.props}>
+<Tag className={'mdc-button__label ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -73,7 +73,7 @@ Button.Label = @asNode class extends Component
 Button.Icon = @asNode class extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <span/>
+    DEFAULT_TAG = 'span'
 
     prepare()
     {
@@ -85,13 +85,13 @@ Button.Icon = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag aria-hidden="true" className={'mdc-button__icon ' + values.className}
+<Tag aria-hidden="true" className={'mdc-button__icon ' + values.className}
     {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -102,7 +102,7 @@ Button.Icon = @asNode class extends Component
 export class IconButton extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <button/>
+    DEFAULT_TAG = 'button'
 
     componentDidMount()
     {
@@ -120,13 +120,13 @@ export class IconButton extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag ref={this.el} aria-label={values.label} title={values.label}
+<Tag ref={this.el} aria-label={values.label} title={values.label}
     className={'mdc-icon-button ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -162,7 +162,7 @@ export class ToggleButton extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
 <button ref={this.el} type="button"

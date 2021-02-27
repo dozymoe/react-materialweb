@@ -10,7 +10,7 @@ export class List extends Component
 {
     WANT_CHILDREN = true
     MODES = ['one_line', 'two_line']
-    DEFAULT_TAG = <ul/>
+    DEFAULT_TAG = 'ul'
 
     prepare()
     {
@@ -27,12 +27,12 @@ export class List extends Component
 
     template()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag ref={this.el} className={'mdc-list ' + values.className} {...values.props}>
+<Tag ref={this.el} className={'mdc-list ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -42,17 +42,17 @@ export class List extends Component
 List.Item = @asNode class extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <li/>
+    DEFAULT_TAG = 'li'
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-list-item ' + values.className} {...values.props}>
+<Tag className={'mdc-list-item ' + values.className} {...values.props}>
   <span className="mdc-list-item__ripple"></span>
   <span className="mdc-list-item__text">{values.child}</span>
-</tag>
+</Tag>
 
         );
     }
@@ -61,17 +61,17 @@ List.Item = @asNode class extends Component
 List.LinePrimary = @asNode class extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <span/>
+    DEFAULT_TAG = 'span'
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-list-item__primary-text ' + values.className}
+<Tag className={'mdc-list-item__primary-text ' + values.className}
     {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -80,17 +80,17 @@ List.LinePrimary = @asNode class extends Component
 List.LineSecondary = @asNode class extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <span/>
+    DEFAULT_TAG = 'span'
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-list-item__secondary-text ' + values.className}
+<Tag className={'mdc-list-item__secondary-text ' + values.className}
     {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -99,15 +99,15 @@ List.LineSecondary = @asNode class extends Component
 List.Group = @asNode class extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <h3/>
+    DEFAULT_TAG = 'h3'
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
 <div className={'mdc-list-group ' + values.className} {...values.props}>
-  <tag className="mdc-list-group__subheader">{values.label}</tag>
+  <Tag className="mdc-list-group__subheader">{values.label}</Tag>
   {values.child}
 </div>
 
@@ -117,14 +117,14 @@ List.Group = @asNode class extends Component
 
 List.Divider = @asNode class extends Component
 {
-    DEFAULT_TAG = <li/>
+    DEFAULT_TAG = 'li'
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag role="separator" className={'mdc-list-divider ' + values.className}
+<Tag role="separator" className={'mdc-list-divider ' + values.className}
     {...values.props} />
 
         );
@@ -137,7 +137,7 @@ export class SelectList extends Component
 {
     WANT_CHILDREN = true
     MODES = ['list', 'radio', 'checkbox']
-    DEFAULT_TAG = <ul/>
+    DEFAULT_TAG = 'ul'
 
     prepare()
     {
@@ -169,12 +169,12 @@ export class SelectList extends Component
 
     template()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag ref={this.el} className={'mdc-list ' + values.className} {...values.props}>
+<Tag ref={this.el} className={'mdc-list ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -184,7 +184,7 @@ SelectList.Item = @asNode class extends Component
 {
     WANT_CHILDREN = true
     NODE_PROPS = ['selected', 'name', 'value']
-    DEFAULT_TAG = <li/>
+    DEFAULT_TAG = 'li'
 
     prepare()
     {
@@ -227,23 +227,23 @@ SelectList.Item = @asNode class extends Component
 
     template_list()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag role="option" className={'mdc-list-item ' + values.className}
+<Tag role="option" className={'mdc-list-item ' + values.className}
     {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
 
     template_radio()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag role="radio" className={'mdc-list-item ' + values.className}
+<Tag role="radio" className={'mdc-list-item ' + values.className}
     {...values.props}>
   <span className="mdc-list-item__ripple"></span>
   <span className="mdc-list-item__graphic">
@@ -260,17 +260,17 @@ SelectList.Item = @asNode class extends Component
   <label htmlFor={values.id} className="mdc-list-item__text">
     {values.label}
   </label>
-</tag>
+</Tag>
 
         );
     }
 
     template_checkbox()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag role="checkbox" className={'mdc-list-item ' + values.className}
+<Tag role="checkbox" className={'mdc-list-item ' + values.className}
       {...values.props}>
   <span className="mdc-list-item__ripple"></span>
   <span className="mdc-list-item__graphic">
@@ -290,7 +290,7 @@ SelectList.Item = @asNode class extends Component
   <label htmlFor={values.id} className="mdc-list-item__text">
     {values.label}
   </label>
-</tag>
+</Tag>
 
         );
     }

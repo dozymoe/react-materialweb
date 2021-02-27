@@ -13,7 +13,7 @@ export class Select extends Component
     HIDE_FORM_FIELD = true
     MODES = ['filled', 'outlined']
     NODE_PROPS = ['value', 'required', 'disabled', 'onChange']
-    DEFAULT_TAG = <ul/>
+    DEFAULT_TAG = 'ul'
 
     @observable selected_text = ''
 
@@ -71,7 +71,7 @@ export class Select extends Component
 
     template_filled()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
 <div ref={this.el}
@@ -98,9 +98,9 @@ export class Select extends Component
   </div>
 
   <div className="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth">
-    <tag className="mdc-list" role="listbox" aria-label={values.label}>
+    <Tag className="mdc-list" role="listbox" aria-label={values.label}>
       {values.child}
-    </tag>
+    </Tag>
   </div>
 </div>
 
@@ -109,7 +109,7 @@ export class Select extends Component
 
     template_outlined()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
 <div ref={this.el}
@@ -141,9 +141,9 @@ export class Select extends Component
 
   <div className={'mdc-select__menu mdc-menu mdc-menu-surface' +
         ' mdc-menu-surface--fullwidth'}>
-    <tag role="listbox" className="mdc-list">
+    <Tag role="listbox" className="mdc-list">
       {values.child}
-    </tag>
+    </Tag>
   </div>
 </div>
 
@@ -181,7 +181,7 @@ Select.Item = @asNode class extends Component
 {
     WANT_CHILDREN = true
     NODE_PROPS = ['value', 'disabled']
-    DEFAULT_TAG = <li/>
+    DEFAULT_TAG = 'li'
 
     prepare()
     {
@@ -203,16 +203,16 @@ Select.Item = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag role="option" data-value={values.value || ''}
+<Tag role="option" data-value={values.value || ''}
     className={'mdc-list-item ' + values.className} {...values.props}>
   <span className="mdc-list-item__ripple" />
   <span className="mdc-list-item__text">
     {values.child}
   </span>
-</tag>
+</Tag>
 
         );
     }

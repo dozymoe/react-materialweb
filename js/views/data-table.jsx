@@ -10,7 +10,7 @@ export class DataTable extends Component
 {
     WANT_CHILDREN = true
     NODE_PROPS = ['name', 'pager', 'page_name', 'row_selectable', 'row_movable']
-    DEFAULT_TAG = <table/>
+    DEFAULT_TAG = 'table'
 
     prepare()
     {
@@ -177,16 +177,16 @@ export class DataTable extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
 <div className="mdc-data-table">
   <div className="mdc-data-table__table--container">
-    <tag aria-label={values.label}
+    <Tag aria-label={values.label}
         className={'mdc-data-table__table ' + values.className}
         {...values.props}>
       {values.child}
-    </tag>
+    </Tag>
   </div>
   {values.pagination}
 </div>
@@ -199,16 +199,16 @@ export class DataTable extends Component
 DataTable.Head = @asNode class extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <thead/>
+    DEFAULT_TAG = 'thead'
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={values.className} {...values.props}>
+<Tag className={values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -218,7 +218,7 @@ DataTable.Head = @asNode class extends Component
 DataTable.Head.Row = @asNode class extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <tr/>
+    DEFAULT_TAG = 'tr'
 
     prepare()
     {
@@ -255,14 +255,14 @@ DataTable.Head.Row = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-data-table__header-row ' + values.className}
+<Tag className={'mdc-data-table__header-row ' + values.className}
     {...values.props}>
   {values.select_checkbox}
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -273,7 +273,7 @@ DataTable.Head.Col == @asNode class extends Component
 {
     WANT_CHILDREN = true
     NODE_PROPS = ['type']
-    DEFAULT_TAG = <th/>
+    DEFAULT_TAG = 'th'
 
     prepare()
     {
@@ -286,14 +286,14 @@ DataTable.Head.Col == @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag role="columnheader" scope="col"
+<Tag role="columnheader" scope="col"
     className={'mdc-data-table__header-cell ' + values.className}
     {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -303,17 +303,17 @@ DataTable.Head.Col == @asNode class extends Component
 DataTable.Body = @asNode class extends Component
 {
     WANT_CHILDREN = true
-    DEFAULT_TAG = <tbody/>
+    DEFAULT_TAG = 'tbody'
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-data-table__content ' + values.className}
+<Tag className={'mdc-data-table__content ' + values.className}
     {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -324,7 +324,7 @@ DataTable.Row = @asNode class extends Component
 {
     WANT_CHILDREN = true
     NODE_PROPS = ['value']
-    DEFAULT_TAG = <tr/>
+    DEFAULT_TAG = 'tr'
 
     prepare()
     {
@@ -365,13 +365,13 @@ DataTable.Row = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-data-table__row ' + values.className} {...values.props}>
+<Tag className={'mdc-data-table__row ' + values.className} {...values.props}>
   {values.select_checkbox}
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -382,7 +382,7 @@ DataTable.Col = @asNode class extends Component
 {
     WANT_CHILDREN = true
     NODE_PROPS = ['type']
-    DEFAULT_TAG = <td/>
+    DEFAULT_TAG = 'td'
 
     prepare()
     {
@@ -397,9 +397,9 @@ DataTable.Col = @asNode class extends Component
     {
         return (
 
-<tag className={'mdc-data-table__cell ' + values.className} {...values.props}>
+<Tag className={'mdc-data-table__cell ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -410,7 +410,7 @@ DataTable.ColHeader = @asNode class extends Component
 {
     WANT_CHILDREN = true
     NODE_PROPS = ['type']
-    DEFAULT_TAG = <th/>
+    DEFAULT_TAG = 'th'
 
     prepare()
     {
@@ -428,13 +428,13 @@ DataTable.ColHeader = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag scope="row" className={'mdc-data-table__cell ' + values.className}
+<Tag scope="row" className={'mdc-data-table__cell ' + values.className}
     {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }

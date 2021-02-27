@@ -23,12 +23,12 @@ export class Card extends Component
 
     template()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-card ' + values.className} {...values.props}>
+<Tag className={'mdc-card ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -41,13 +41,13 @@ Card.PrimaryAction = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag tabindex="0" className={'mdc-card__primary-action ' + values.className}
+<Tag tabindex="0" className={'mdc-card__primary-action ' + values.className}
     {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -69,14 +69,14 @@ Card.Media = @asNode class extends Component
 
     template()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-card__media ' + values.className} {...values.props}>
+<Tag className={'mdc-card__media ' + values.className} {...values.props}>
   <div className="mdc-card__media-content">
     {values.child}
   </div>
-</tag>
+</Tag>
 
         );
     }
@@ -103,12 +103,12 @@ Card.Actions = @asNode class extends Component
 
     template()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-card__actions ' + values.className} {...values.props}>
+<Tag className={'mdc-card__actions ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -121,12 +121,12 @@ Card.Content = @asNode class extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-card__content ' + values.className} {...values.props}>
+<Tag className={'mdc-card__content ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }

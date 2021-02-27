@@ -8,7 +8,7 @@ export class ImageList extends Component
 {
     WANT_CHILDREN = true
     MODES = ['default', 'masonry']
-    DEFAULT_TAG = <ul/>
+    DEFAULT_TAG = 'ul'
 
     prepare()
     {
@@ -23,12 +23,12 @@ export class ImageList extends Component
 
     template()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-image-list ' + values.className} {...values.props}>
+<Tag className={'mdc-image-list ' + values.className} {...values.props}>
   {values.child}
-</tag>
+</Tag>
 
         );
     }
@@ -38,7 +38,7 @@ ImageList.Item = @asNode class extends Component
 {
     WANT_CHILDREN = true
     NODE_PROPS = ('image', 'reversed')
-    DEFAULT_TAG = <li/>
+    DEFAULT_TAG = 'li'
 
     prepare()
     {
@@ -48,7 +48,7 @@ ImageList.Item = @asNode class extends Component
 
     template()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
 
         // From ImageList
         let mode = this.context.list_mode;
@@ -76,9 +76,9 @@ ImageList.Item = @asNode class extends Component
 
         return (
 
-<tag className={'mdc-image-list__item ' + values.className}>
+<Tag className={'mdc-image-list__item ' + values.className}>
   {values.reverse ? {part2}{part1} : {part1}{part2}}
-</tag>
+</Tag>
 
         );
     }

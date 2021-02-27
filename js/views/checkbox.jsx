@@ -29,10 +29,10 @@ export class CheckBox extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag className={'mdc-form-field ' + values.className} {...values.props}>
+<Tag className={'mdc-form-field ' + values.className} {...values.props}>
   <div className="mdc-checkbox">
     {values.element}
     <div className="mdc-checkbox__background">
@@ -45,7 +45,7 @@ export class CheckBox extends Component
     <div className="mdc-checkbox__ripple"></div>
   </div>
   <label htmlFor="{id}">{values.label}</label>
-</tag>
+</Tag>
 
         );
     }
@@ -76,11 +76,11 @@ export class CheckBoxInput extends Component
 
     template_default()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
 <div className="mdc-touch-target-wrapper">
-  <tag className={'mdc-form-field ' + values.className} {...values.props}>
+  <Tag className={'mdc-form-field ' + values.className} {...values.props}>
     <div className="mdc-checkbox">
       {values.element}
       <div className="mdc-checkbox__background">
@@ -93,7 +93,7 @@ export class CheckBoxInput extends Component
       <div className="mdc-checkbox__ripple"></div>
     </div>
     <label htmlFor={values.id}>{values.label}</label>
-  </tag>
+  </Tag>
 </div>
 
         );

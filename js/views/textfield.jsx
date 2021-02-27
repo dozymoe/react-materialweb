@@ -9,7 +9,7 @@ export class TextField extends Component
 {
     WANT_CHILDREN = true
     MODES = ['filled', 'outlined', 'fullwidth']
-    DEFAULT_TAG = <label/>
+    DEFAULT_TAG = 'label'
 
     prepare_attributes(attrs, default_)
     {
@@ -35,10 +35,10 @@ export class TextField extends Component
 
     template_filled()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag ref={this.el}
+<Tag ref={this.el}
     className={'mdc-text-field mdc-text-field--filled '
         + values.className}
     {...values.props}>
@@ -48,17 +48,17 @@ export class TextField extends Component
     {values.label}
   </span>
   <span className="mdc-line-ripple" />
-</tag>
+</Tag>
 
         );
     }
 
     template_outlined()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag ref={this.el}
+<Tag ref={this.el}
     className={'mdc-text-field mdc-text-field--outlined '
         + values.className}
     {...values.props}>
@@ -72,17 +72,17 @@ export class TextField extends Component
     </span>
     <span className="mdc-notched-outline__trailing" />
   </span>
-</tag>
+</Tag>
 
         );
     }
 
     template_fullwidth()
     {
-        const values = this.values, tag = values.tag;
+        const values = this.values, Tag = values.tag;
         return (
 
-<tag ref={this.el}
+<Tag ref={this.el}
     className={'mdc-text-field mdc-text-field--filled '
         + 'mdc-text-field--fullwidth '
         + values.className}
@@ -90,7 +90,7 @@ export class TextField extends Component
   <span className="mdc-text-field__ripple" />
   {values.element}
   <span className="mdc-line-ripple" />
-</tag>
+</Tag>
 
         );
     }

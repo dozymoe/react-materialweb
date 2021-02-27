@@ -1,4 +1,4 @@
-import { omit, omitBy, uniqueid } from 'lodash';
+import { omit, omitBy, uniqueId } from 'lodash';
 import { observer } from 'mobx-react';
 import React from 'react';
 //-
@@ -21,7 +21,7 @@ export function asNode(Component)
             super(props);
             this.MODES = this.MODES || [];
             this.NODE_PROPS = this.NODE_PROPS || [];
-            this.DEFAULT_TAG = this.DEFAULT_TAG || <div/>;
+            this.DEFAULT_TAG = this.DEFAULT_TAG || 'div';
 
             this.el = new React.createRef();
 

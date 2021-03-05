@@ -12,6 +12,8 @@ export class List extends Component
     MODES = ['one_line', 'two_line']
     DEFAULT_TAG = 'ul'
 
+    CATCH_PROPERTIES = ['list_props']
+
     prepare()
     {
         if (this.mode === 'two_line')
@@ -42,7 +44,19 @@ export class List extends Component
 List.Item = @asNode class extends Component
 {
     WANT_CHILDREN = true
+    NODE_PROPS = ['activated']
     DEFAULT_TAG = 'li'
+
+    CATCH_PROPERTIES = ['list_item_props']
+
+    prepare()
+    {
+        let activated = this.eval(this.props.activated);
+        if (activated)
+        {
+            this.values.className.push('mdc-list-item--activated');
+        }
+    }
 
     template_default()
     {
@@ -51,7 +65,46 @@ List.Item = @asNode class extends Component
 
 <Tag className={'mdc-list-item ' + values.className} {...values.props}>
   <span className="mdc-list-item__ripple"></span>
-  <span className="mdc-list-item__text">{values.child}</span>
+  {values.child}
+</Tag>
+
+        );
+    }
+}
+
+List.Image = @asNode class extends Component
+{
+    WANT_CHILDREN = true
+    DEFAULT_TAG = 'span'
+
+    CATCH_CLASSNAMES = ['list_image_class']
+
+    template_default()
+    {
+        const values = this.values, Tag = values.tag;
+        return (
+
+<Tag aria-hidden="true" className={'mdc-list-item__graphic ' + values.className}
+    {...values.props}>
+  {values.child}
+</Tag>
+
+        );
+    }
+}
+
+List.Text = @asNode class extends Component
+{
+    WANT_CHILDREN = true
+    DEFAULT_TAG = 'span'
+
+    template_default()
+    {
+        const values = this.values, Tag = values.tag;
+        return (
+
+<Tag className={'mdc-list-item__text ' + values.className} {...values.props}>
+  {values.child}
 </Tag>
 
         );

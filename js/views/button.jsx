@@ -12,6 +12,8 @@ export class Button extends Component
     MODES = ['outlined', 'raised']
     DEFAULT_TAG = 'button'
 
+    CATCH_CLASSNAMES = ['button_class']
+
     componentDidMount()
     {
         this.mdc = new MDCRipple(this.el.current);
@@ -19,10 +21,6 @@ export class Button extends Component
 
     prepare()
     {
-        if (this.context.button_class)
-        {
-            this.values.className.push(...this.context.button_class);
-        }
         if (this.mode === 'outlined')
         {
             this.values.className.push('mdc-button--outlined');
@@ -75,13 +73,7 @@ Button.Icon = @asNode class extends Component
     WANT_CHILDREN = true
     DEFAULT_TAG = 'span'
 
-    prepare()
-    {
-        if (this.context.button_icon_class)
-        {
-            this.values.className.push(...this.context.button_icon_class);
-        }
-    }
+    CATCH_CLASSNAMES = ['button_icon_class']
 
     template_default()
     {
@@ -104,18 +96,12 @@ export class IconButton extends Component
     WANT_CHILDREN = true
     DEFAULT_TAG = 'button'
 
+    CATCH_CLASSNAMES = ['button_class', 'button_icon_class]
+
     componentDidMount()
     {
         this.mdc = new MDCRipple(this.el.current);
         this.mdc.unbounded = true;
-    }
-
-    prepare()
-    {
-        if (this.context.button_icon_class)
-        {
-            this.values.className.push(...this.context.button_icon_class);
-        }
     }
 
     template_default()
@@ -138,6 +124,8 @@ export class ToggleButton extends Component
 {
     NODE_PROPS = ['type', 'state', 'icon_when_on', 'icon_when_off']
 
+    CATCH_CLASSNAMES = ['button_class']
+
     componentDidMount()
     {
         this.mdc = new MDCIconButtonToggle(this.el.current);
@@ -149,10 +137,6 @@ export class ToggleButton extends Component
         this.values.icon_when_on = this.props.icon_when_on;
         this.values.icon_when_off = this.props.icon_when_off;
 
-        if (this.context.button_class)
-        {
-            this.values.className.push(...this.context.button_class);
-        }
         if (this.values.state)
         {
             this.values.className.push('mdc-icon-button--on');

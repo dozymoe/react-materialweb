@@ -16,6 +16,9 @@ export function asNode(Component)
         MUST_HAVE_NODE_PROPS = ['mode', 'tag', 'class', 'label', 'bound_field',
                 'help_text', 'context']
 
+        CATCH_CLASSNAMES = []
+        CATCH_PROPERTIES = []
+
         constructor(props)
         {
             super(props);
@@ -165,6 +168,23 @@ export function asNode(Component)
                 className: (ensurePrimitive(this.props.className) || '')
                     .split(' ').filter(x => x),
             }
+
+            // Parent Tags can set html attributes on their childs.
+            for (let ext of this.CATCH_CLASSNAMES)
+            {
+                if (this.context[ext])
+                {
+                    values.className.push(...this.context[ext]);
+                }
+            }
+            for (let ext of this.CATCH_PROPERTIES)
+            {
+                if (this.context[ext])
+                {
+                    Object.assign(values.props, this.context[ext]);
+                }
+            }
+
             if (this.prepare)
             {
                 this.prepare();

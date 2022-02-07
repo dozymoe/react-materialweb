@@ -29,7 +29,8 @@ export class DataTable extends Component
     {
         let url = new URL(pager.get_full_path());
         let page_name = this.eval(this.props.page_name) || 'page';
-        let href, first_kwargs, prev_kwargs, next_kwargs, extra_kwargs;
+        let href, first_kwargs, prev_kwargs, last_kwargs, next_kwargs;
+        let extra_kwargs;
 
         if (pager.has_previous())
         {
@@ -89,7 +90,7 @@ export class DataTable extends Component
                 {...last_kwargs} {...extra_kwargs}
                 >last_page</IconButton>;
 
-        values = {
+        let values = {
             page_size: pager.pagination.per_page,
             total_pages: pager.pagination.num_pages,
             total_items: pager.pagination.count,
@@ -113,7 +114,7 @@ export class DataTable extends Component
 
       <div className="mdc-select mdc-select--outlined mdc-select--no-label mdc-data-table__pagination-rows-per-page-select">
         <div role="button" aria-haspopup="listbox"
-            aria-labelledby={values.id_page_size} tabindex="0"
+            aria-labelledby={values.id_page_size} tabIndex="0"
             className="mdc-select__anchor">
           <span id={values.id_page_size} className="mdc-select__selected-text">
             {values.page_size}
@@ -125,13 +126,13 @@ export class DataTable extends Component
               <polygon
                   className="mdc-select__dropdown-icon-inactive"
                   stroke="none"
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   points="7 10 12 15 17 10">
               </polygon>
               <polygon
                   className="mdc-select__dropdown-icon-active"
                   stroke="none"
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   points="7 15 12 10 17 15">
               </polygon>
             </svg>
@@ -269,7 +270,7 @@ DataTable.Head.Row = @asNode class extends Component
 }
 
 
-DataTable.Head.Col == @asNode class extends Component
+DataTable.Head.Col = @asNode class extends Component
 {
     WANT_CHILDREN = true
     NODE_PROPS = ['type']
@@ -395,6 +396,7 @@ DataTable.Col = @asNode class extends Component
 
     template_default()
     {
+        const values = this.values, Tag = values.tag;
         return (
 
 <Tag className={'mdc-data-table__cell ' + values.className} {...values.props}>

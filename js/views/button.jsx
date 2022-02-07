@@ -96,7 +96,7 @@ export class IconButton extends Component
     WANT_CHILDREN = true
     DEFAULT_TAG = 'button'
 
-    CATCH_CLASSNAMES = ['button_class', 'button_icon_class]
+    CATCH_CLASSNAMES = ['button_class', 'button_icon_class']
 
     componentDidMount()
     {
